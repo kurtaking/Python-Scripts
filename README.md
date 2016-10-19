@@ -8,9 +8,9 @@ Usage: sort_file \<input file> \<output file>
 
 For help, run sort_file -h
 
-### generate_json (incomplete)
+### generate_json
 This script takes an input file and will create JSON objects out of the content that is specified on each line.  
-This file is still under development  
+##### This file is still under development. It currently only works if the object you want to create has a single field.  
 
 Usage: generate_json \<input file> \<output_file.json> \<model name> \<field name>  
 
