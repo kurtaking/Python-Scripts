@@ -6,3 +6,5 @@ Takes an input file, sorts the content of the file and outputs the contents to a
 
 Usage: sort_file \<input file> \<output file>
 
+For help, run sort_file -h
+
