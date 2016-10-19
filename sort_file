@@ -1,0 +1,32 @@
+#! /usr/bin/python
+
+import sys
+
+content = []
+
+# display usage statement if user runs script with -h argument
+if sys.argv[1] == "-h":
+    print("  Usage: sort_file <input file> <output file>")
+    sys.exit(1)
+# display error message if user does not provide enough arguments
+elif len(sys.argv) != 3:
+    print("Please provide an input and output files")
+    print("  Usage: sort_file <input file> <output file>")
+    sys.exit(1)
+
+# open the file to write to
+outfile = open(sys.argv[2], 'w')
+
+# open and read the input file line by line
+with open(sys.argv[1], 'r') as fp:
+    for new_line in fp:
+        line = new_line.rstrip();       # strip the newline
+        content.append(line)            # append the line in file to list
+
+    content.sort()                      # sort the list
+
+    # loop through content list and write to output file line by line
+    for item in content:
+        outfile.write(item + "\n")
+
+outfile.close()
