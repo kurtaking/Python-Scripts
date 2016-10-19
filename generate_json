@@ -1,19 +1,52 @@
 #! /usr/bin/python
 
 import sys
+import re
+
+check_output_file = ".json"
+
+if sys.argv[1] == "-h":
+    print(" This script is intended to take an input file and convert it to JSON objects")
+    print(" Usage: ")
+    print("    generate_json <input file> <output_file.json> <model name> <field name>\n")
+    print("    - generate_json\t\tThe JSON generation script")
+    print("    - <input file>\t\tInput file")
+    print("    - <output file>\t\tOutput file which needs the extension \".json\"")
+    print("    - <model name>\t\tThe name of the model you want to include in the JSON object")
+    print("    - <field name>\t\tThe name of the field attribute the model will have")
+    sys.exit(1)
+elif len(sys.argv) != 5:
+    print(" Please provide an input file and output file. The output file should have the extension \".json.\"")
+    print(" The script also takes a model name and field name")
+    print(" Usage: generate_json <input file> <output_file.json> <model name> <field name>\n")
+    print(" Run generate_json -h for more information\n")
+    sys.exit(1)
+elif check_output_file not in sys.argv[2]:
+    print(" Output file must contain \".json\" extension")
+    print(" Usage: generate_json <input file> <output_file.json> <model name> <field name>\n")
+    sys.exit(1)
 
 i = 1
 
-start = "{\"pk\":"
-model = ", \"model\": \"peerd.strength\","
-field = " \"fields\": {\"name\": "
+input_model = sys.argv[3]
+input_field = sys.argv[4]
+
+pk = "{\"pk\":"
+model = ", \"" +  "model" + "\": \"" + input_model + "\","
+field = " \"fields\": {\"" + input_field + "\": "
 end = "}}"
 json = []
+
+output = open(sys.argv[2], 'w')
 
 with open(sys.argv[1], 'r') as fp:
     for new_line in fp:
         line = new_line.rstrip();
-        json.append(start + " " +  str(i) + model + field + "\"" + line + "\"" + end)
+        json.append(pk + " " +  str(i) + model + field + "\"" + line + "\"" + end)
         i = i+1
 
-    print(json)
+    output_string = str(json)
+    output_string = re.sub("\'", "", output_string)
+    output.write(output_string)
+
+output.close()
