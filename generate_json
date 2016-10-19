@@ -5,10 +5,8 @@ import re
 
 check_output_file = ".json"
 
-if len(sys.argv) < 2:
-    print(" Error. Run generate_json -h for more help")
-    sys.exit(1)
-elif sys.argv[1] == "-h":
+# Prints usage statement for script
+def print_usage():
     print(" This script is intended to take an input file and convert it to JSON objects")
     print(" Usage: ")
     print("    generate_json <input file> <output_file.json> <model name> <field name>\n")
@@ -17,58 +15,77 @@ elif sys.argv[1] == "-h":
     print("    - <output file>\t\tOutput file which needs the extension \".json\"")
     print("    - <model name>\t\tThe name of the model you want to include in the JSON object")
     print("    - <field name>\t\tThe name of the field attribute the model will have")
-    sys.exit(1)
-elif len(sys.argv) != 5:
-    print(" Please provide an input file and output file. The output file should have the extension \".json.\"")
-    print(" The script also takes a model name and field name")
-    print(" Usage: generate_json <input file> <output_file.json> <model name> <field name>\n")
-    print(" Run generate_json -h for more information\n")
-    sys.exit(1)
-elif check_output_file not in sys.argv[2]:
-    print(" Output file must contain \".json\" extension")
-    print(" Usage: generate_json <input file> <output_file.json> <model name> <field name>\n")
-    sys.exit(1)
 
-print("Input file = \t" + sys.argv[1])
-print("Output file = \t" + sys.argv[2])
-print("Model name = \t" + sys.argv[3])
-print("Field name = \t" + sys.argv[4] + "\n")
+# Verify users command line arguments
+def allow_user_verification():
+    print("Input file = \t" + sys.argv[1])
+    print("Output file = \t" + sys.argv[2])
+    print("Model name = \t" + sys.argv[3])
+    print("Field name = \t" + sys.argv[4] + "\n")
 
-print("Would you like to generate the JSON file? (Y/n)")
-while 1:
-    try:
-        response = sys.stdin.readline()
-        if response[:1] == 'Y':
-            print("Generating JSON file")
-            break;
-        elif response[:1] == 'n':
-            sys.exit(1)
-        else:
-            print("Please type \'Y\' for yes and \'n\' for no")
-    except IOError: pass
+    print("Would you like to generate the JSON file? (Y/n)")
+    while 1:
+        try:
+            response = sys.stdin.readline()
+            if response[:1] == 'Y':
+                print("Generating JSON file")
+                break;
+            elif response[:1] == 'n':
+                sys.exit(1)
+            else:
+                print("Please type \'Y\' for yes and \'n\' for no")
+        except IOError: pass
 
+# Error checks the users command line arguments
+def error_checking():
+    if len(sys.argv) < 2:
+        print(" Error. Run generate_json -h for more help")
+        sys.exit(1)
+    elif sys.argv[1] == "-h":
+        print_usage()
+        sys.exit(1)
+    elif len(sys.argv) != 5:
+        print(" Please provide an input file and output file. The output file should have the extension \".json.\"")
+        print(" The script also takes a model name and field name")
+        print(" Usage: generate_json <input file> <output_file.json> <model name> <field name>\n")
+        print(" Run generate_json -h for more information\n")
+        sys.exit(1)
+    elif check_output_file not in sys.argv[2]:
+        print(" Output file must contain \".json\" extension")
+        print(" Usage: generate_json <input file> <output_file.json> <model name> <field name>\n")
+        sys.exit(1)
 
-i = 1
+# Start of Script
 
-input_model = sys.argv[3]
-input_field = sys.argv[4]
+# Error Checking
+error_checking()
+allow_user_verification()
 
+i = 1                       # used to generate pk value
+input_model = sys.argv[3]   # value of the model the user provided
+input_field = sys.argv[4]   # value of the field the user provided
+
+# Strings to create the JSON object
 pk = "{\"pk\":"
 model = ", \"" +  "model" + "\": \"" + input_model + "\","
 field = " \"fields\": {\"" + input_field + "\": "
 end = "}}"
 json = []
 
+# Open the file to output the JSON to
 output = open(sys.argv[2], 'w')
 
+# Loop through the file and read line by line
 with open(sys.argv[1], 'r') as fp:
     for new_line in fp:
-        line = new_line.rstrip();
+        line = new_line.rstrip();   # strip newline
         json.append(pk + " " +  str(i) + model + field + "\"" + line + "\"" + end)
         i = i+1
 
-    output_string = str(json)
-    output_string = re.sub("\'", "", output_string)
-    output.write(output_string)
+    output_string = str(json)                           # need to convert json list to string
+    output_string = re.sub("\'", "", output_string)     # remove single quotes list creates
+    output.write(output_string)                         # write string to output file
 
-output.close()
+output.close()                                          # close the ouput file
+
+# end of script
