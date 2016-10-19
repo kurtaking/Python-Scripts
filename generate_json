@@ -5,7 +5,10 @@ import re
 
 check_output_file = ".json"
 
-if sys.argv[1] == "-h":
+if len(sys.argv) < 2:
+    print(" Error. Run generate_json -h for more help")
+    sys.exit(1)
+elif sys.argv[1] == "-h":
     print(" This script is intended to take an input file and convert it to JSON objects")
     print(" Usage: ")
     print("    generate_json <input file> <output_file.json> <model name> <field name>\n")
