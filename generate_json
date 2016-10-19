@@ -1,0 +1,19 @@
+#! /usr/bin/python
+
+import sys
+
+i = 1
+
+start = "{\"pk\":"
+model = ", \"model\": \"peerd.strength\","
+field = " \"fields\": {\"name\": "
+end = "}}"
+json = []
+
+with open(sys.argv[1], 'r') as fp:
+    for new_line in fp:
+        line = new_line.rstrip();
+        json.append(start + " " +  str(i) + model + field + "\"" + line + "\"" + end)
+        i = i+1
+
+    print(json)
